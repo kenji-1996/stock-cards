@@ -1,10 +1,9 @@
+// Color changing interaction
 let changeColor = document.getElementById('changeColor');
-
 chrome.storage.sync.get('color', function(data) {
     changeColor.style.backgroundColor = data.color;
     changeColor.setAttribute('value', data.color);
 });
-
 changeColor.onclick = function(element) {
     let color = element.target.value;
     chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
@@ -12,4 +11,9 @@ changeColor.onclick = function(element) {
             tabs[0].id,
             {code: 'document.body.style.backgroundColor = "' + color + '";'});
     });
+};
+//Interacting with database
+let queryDB = document.getElementById('queryDatabase');
+queryDB.onclick = function(element) {
+
 };
