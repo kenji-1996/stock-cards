@@ -12,8 +12,7 @@ changeColor.onclick = function(element) {
             {code: 'document.body.style.backgroundColor = "' + color + '";'});
     });
 };
-//Interacting with database
-let queryDB = document.getElementById('queryDatabase');
-queryDB.onclick = function(element) {
-
-};
+chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+    console.log(tabs);
+    //chrome.tabs.executeScript(tabs[0].id, {code: 'document.body.style.backgroundColor = "' + color + '";'});
+});

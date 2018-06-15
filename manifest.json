@@ -2,7 +2,7 @@
   "name": "Stock Ref",
   "version": "1.0",
   "description": "Checks stock database for stock websites",
-  "permissions": ["storage","declarativeContent", "activeTab", "file:///*", {"fileSystem": ["write", "retainEntries", "directory"]}],
+  "permissions": ["storage","declarativeContent", "activeTab", "http://my.api.net.au/*"],
   "background": {
     "scripts": [
       "js/background.js",
@@ -17,7 +17,6 @@
       "matches": ["<all_urls>"],
       "js": [
         "assets/lib/jquery/jquery-3.3.1.min.js",
-        "assets/lib/accessdb/accessdb.js",
         "assets/js/script.js"
       ],
       "css": ["assets/css/style.css"],
