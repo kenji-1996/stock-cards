@@ -12,3 +12,24 @@ chrome.runtime.onInstalled.addListener(function() {
         }]);
     });
 });
+
+chrome.runtime.onMessage.addListener(
+    function(request, sender, sendResponse) {
+        if(request.type == "partCode") {
+            checkDB(request,sender,sendResponse);
+            return true;
+        }
+    });
+
+function checkDB(request, sender, sendResponse) {
+    var resp = sendResponse;
+    $.ajax({
+        type: "GET",
+        dataType: "json",
+        url: "http://10.30.43.107:49691/partcode?code=" + request.partcode,
+        success: function (data) {
+            resp({result: data, element: request.element});
+        }
+    })
+}
+
