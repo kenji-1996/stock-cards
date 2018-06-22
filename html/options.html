@@ -1,21 +1,30 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <script src="../assets/lib/jquery/jquery-3.3.1.min.js"></script>
+    <script src="../assets/lib/jquery-ui/jquery-ui.min.js"></script>
+    <!--<link rel="stylesheet" type="text/css" href="../assets/lib/jquery-ui/jquery-ui.min.css">-->
     <style>
-        button {
-            height: 30px;
-            width: 30px;
-            outline: none;
-            margin: 10px;
+        .ui-spinner-input {
+            width: 100%;
         }
     </style>
 </head>
 <body>
-<div id="buttonDiv">
-</div>
-<div>
-    <p>Choose a different background color!</p>
+<div id="status"></div>
+<legend>Settings</legend>
+<div class="controlgroup">
+    <label for="host" class="ui-controlgroup-label">Host URL:</label>
+    <input id="host" class="ui-spinner-input">
+    <label for="server" class="ui-controlgroup-label">Server URL:</label>
+    <input id="server" class="ui-spinner-input">
+    <label for="licence" class="ui-controlgroup-label">Licence:</label>
+    <input id="licence" class="ui-spinner-input">
+    <hr>
+
+    <button id="save">Save</button>
 </div>
 </body>
+
 <script src="../js/options.js"></script>
 </html>
