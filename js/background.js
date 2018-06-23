@@ -1,21 +1,20 @@
-var server = 'http://10.30.43.107:49691';
-var licence = 'techgorilla-123';
-var active = false;
-chrome.storage.sync.get(function (obj) {
-    if(obj['server'] && obj['server'] !== null) {
-        server = obj['server'];
-        console.log('server',server);
-    }
-    if(obj['active'] && obj['active'] !== null) {
-        active = obj['active'];
-        console.log('active',active);
-    }
-    if(obj['licence'] && obj['licence'] !== null) {
-        licence = obj['licence'];
-    }
-    licenseCheck();
-});
 chrome.runtime.onInstalled.addListener(function() {
+    var server = 'http://10.30.43.107:49691';
+    var licence = 'techgorilla-123';
+    var host = 'my.api.net.au';
+    var active = false;
+    chrome.storage.sync.get(function (obj) {
+        if(obj['server'] == undefined)
+    }
+    chrome.storage.sync.set({host: host,server: server, licence: licence, active:active}, function() {
+
+    });
+    chrome.storage.sync.get(function (obj) {
+        if(obj['server'] && obj['server'] !== null) {
+            server = obj['server'];
+        }
+    });
+    licenseCheck();
     chrome.declarativeContent.onPageChanged.removeRules(undefined, function() {
             chrome.declarativeContent.onPageChanged.addRules([{
                 conditions: [new chrome.declarativeContent.PageStateMatcher({pageUrl: {hostEquals: 'my.api.net.au'},})],
@@ -26,18 +25,28 @@ chrome.runtime.onInstalled.addListener(function() {
 
 function licenseCheck() {
     if(jQuery) {
-        $.ajax({
-            type: "GET",
-            dataType: "json",
-            url: "https://billing.techgorilla.io/modules/servers/licensing/check.php?license=" + licence,
-            success: function (data) {
-                if (data.status === 'Active') {
-                    chrome.storage.sync.set({active: true}, function () {console.log('active set to true')});
-                } else {
-                    chrome.storage.sync.set({active: false}, function () { chrome.storage.sync.set({active: true}, function () {console.log('active set to false')});});
-                }
+        chrome.storage.sync.get(function (obj) {
+            var license,active;
+            if(obj['licence'] && obj['licence'] !== null) {
+                licence = obj['licence'];
+            }else{
+                alert('no license set');
             }
-        }).done(function () {
+            $.ajax({
+                type: "GET",
+                dataType: "json",
+                url: "https://billing.techgorilla.io/modules/servers/licensing/stock-cards-check.php?license=" + licence,
+                success: function (data) {
+
+                }
+            }).done(function (data) {
+                console.log(data);
+                if (data.status === 'Active') {
+                    chrome.storage.sync.set({active: true}, function () {console.log('Valid license'); });
+                } else {
+                    chrome.storage.sync.set({active: false}, function () { console.log('Invalid license'); });
+                }
+            });
         });
     }else{
         alert('License check failed due to jQuery');
@@ -50,17 +59,27 @@ chrome.runtime.onMessage.addListener(
             checkDB(request,sender,sendResponse);
             return true;
         }
+        if(request.type == "options") {
+            chrome.runtime.openOptionsPage();
+            return true;
+        }
+        if(request.type == "license") {
+            licenseCheck();
+            return true;
+        }
     });
 
 function checkDB(request, sender, sendResponse) {
-    var resp = sendResponse;
-    $.ajax({
-        type: "GET",
-        dataType: "json",
-        url: server + "/partcode?code=" + request.partcode,
-        success: function (data) {
-            resp({result: data, element: request.element});
-        }
-    })
+    chrome.storage.sync.get(function (obj) {
+        var resp = sendResponse;
+        $.ajax({
+            type: "GET",
+            dataType: "json",
+            url: obj['server'] + "/partcode?code=" + request.partcode,
+            success: function (data) {
+                resp({result: data, element: request.element});
+            }
+        });
+    });
 }
 

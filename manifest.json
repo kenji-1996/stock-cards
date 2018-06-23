@@ -1,6 +1,7 @@
 {
-  "name": "Stock Ref",
-  "version": "1.0",
+  "name": "TechGorilla Stockcards Interface",
+  "short_name": "TG-Stock",
+  "version": "1.0.1",
   "description": "Checks stock database for stock websites",
   "permissions": ["storage","declarativeContent", "activeTab", "http://my.api.net.au/*"],
   "background": {
