@@ -4,11 +4,17 @@ chrome.runtime.onInstalled.addListener(function() {
     var host = 'my.api.net.au';
     var active = false;
     chrome.storage.sync.get(function (obj) {
-        if(obj['server'] == undefined)
-    }
-    chrome.storage.sync.set({host: host,server: server, licence: licence, active:active}, function() {
-
+        if(obj['server'] == undefined || obj['server'] == null) {
+            chrome.storage.sync.set({server: server}, function () {});
+        }
+        if(obj['licence'] == undefined || obj['licence'] == null) {
+            chrome.storage.sync.set({licence: licence}, function () {});
+        }
+        if(obj['host'] == undefined || obj['host'] == null) {
+            chrome.storage.sync.set({host: host}, function () {});
+        }
     });
+    chrome.storage.sync.set({active:active}, function() {});
     chrome.storage.sync.get(function (obj) {
         if(obj['server'] && obj['server'] !== null) {
             server = obj['server'];
