@@ -1,7 +1,7 @@
 {
   "name": "TechGorilla Stockcards Interface",
   "short_name": "TG-Stock",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Checks stock database for stock websites",
   "permissions": ["storage","declarativeContent", "activeTab", "http://my.api.net.au/*"],
   "background": {
@@ -19,11 +19,13 @@
       "js": [
         "assets/lib/jquery/jquery-3.3.1.min.js",
         "assets/lib/jquery-ui/jquery-ui.min.js",
-        "assets/lib/bootstrap/js/popper.min.js",
+        "assets/lib/materialize/js/materialize.min.js",
         "assets/js/script.js"
       ],
       "css": [
         "assets/lib/jquery-ui/jquery-ui.min.css",
+        "assets/lib/materialize/css/icon.css",
+        "assets/lib/materialize-src/sass/materialize.css",
         "assets/css/style.css"
       ],
       "run_at": "document_end"

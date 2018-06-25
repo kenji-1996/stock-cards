@@ -1,30 +1,50 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <script src="../assets/lib/materialize/js/materialize.min.js"></script>
     <script src="../assets/lib/jquery/jquery-3.3.1.min.js"></script>
-    <script src="../assets/lib/jquery-ui/jquery-ui.min.js"></script>
+    <link rel="stylesheet" href="../assets/lib/materialize/css/icon.css">
+    <link rel="stylesheet" href="../assets/lib/materialize-src/sass/materialize.css">
     <!--<link rel="stylesheet" type="text/css" href="../assets/lib/jquery-ui/jquery-ui.min.css">-->
     <style>
-        .ui-spinner-input {
-            width: 100%;
+        body {
+            overflow-x: hidden;
         }
     </style>
 </head>
 <body>
-<div id="status"></div>
-<legend>Settings</legend>
-<div class="controlgroup">
-    <label for="host" class="ui-controlgroup-label">Host URL:</label>
-    <input id="host" class="ui-spinner-input">
-    <label for="server" class="ui-controlgroup-label">Server URL:</label>
-    <input id="server" class="ui-spinner-input">
-    <label for="licence" class="ui-controlgroup-label">Licence:</label>
-    <input id="licence" class="ui-spinner-input">
-    <hr>
-    <button id="save">Save</button>
-    <button id="restore">Restore Default</button>
-</div>
-</body>
+    <div class="row techgorilla-stock-cards">
+        <form class="col s12">
 
-<script src="../js/options.js"></script>
+            <div class="row">
+                <div class="input-field col s12">
+                    <input id="server" type="text" class="validate active">
+                    <label for="server" class="active" id="server_label">Server URL:</label>
+                    <span class="helper-text">IP Or domain where TechGorilla database software is installed</span>
+                </div>
+                <div class="input-field col s12">
+                    <input id="licence" type="text" class="validate active">
+                    <label for="licence" class="active" id="licence_label">License</label>
+                    <span class="helper-text"><a href="https://billing.techgorilla.io">TechGorilla</a> license is required for use.</span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col s9 left-align">
+                    <div class="">
+                        <button class="btn-small waves-effect waves-light orange" id="restore" name="action">Restore Settings</button>
+                    </div>
+                </div>
+                <div class="col s3 right-align">
+                    <div class="">
+                        <button class="btn-small waves-effect waves-light green" id="save" name="action">Save</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</body>
+<footer>
+    <script src="../js/options.js"></script>
+</footer>
+
 </html>

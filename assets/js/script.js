@@ -1,40 +1,44 @@
 var host,active;
 chrome.storage.sync.get(function (obj) {
-    if(obj['host'] && obj['host'] !== null) {
-        host = obj['host'];
-    }
     if(obj['active'] && obj['active'] !== null) {
         active = obj['active'];
         console.log(active);
     }
-    if(window.location.host === host) {
-        if(active == true) {
-            loadScript();
-        }else{
-            licenseProblem();
-        }
-
+    if(window.location.host === 'my.api.net.au' && active === true) {
+        loadScript();
+    }else{
+        licenseProblem();
     }
 });
 
 
 
 function licenseProblem() {
-    $(".page-title h1").append("<br/>" +
-        "<div class='alert alert-warning small'>" +
-        "<a href='#' class='close' data-dismiss='alert'>&times;</a>" +
-        "<strong>License Invalid!</strong><br/>Enter a valid key into the <a href='#' id='openSettings'>settings</a> or contact support at <a href='https://billing.techgorilla.io'>TechGorilla</a>" +
-        "<br/>Stock data cannot be loaded without a valid license" +
-        "<br/><a href='#' id='checkLicense'>Force re-check</a>" +
-        "</div>");
-    $("#openSettings").click(function () {
-        chrome.runtime.sendMessage({type: 'options'},function(res) {});
-    });
-    $("#checkLicense").click(function () {
-        chrome.runtime.sendMessage({type: 'license'},function(res) {
-
+    chrome.storage.sync.get(function (obj) {
+        $(".page-title h1").after(
+            "<div class=''>" +
+                "<div class='invalid-license' id='showAlert'><span class='badge badge-warning pointer'>Show License warning</span></div><br/>" +
+                "<div class='alert alert-warning' id='tg-alert-invalid'>" +
+                "<a href='#' class='close' id='closeAlert'>&times;</a>" +
+                "TechGorilla Stock Interface<br/><strong>License Invalid!</strong> Enter a valid key into the <a href='#' id='openSettings'>settings</a> or contact support at <a href='https://billing.techgorilla.io'>TechGorilla</a>" +
+                "<br/>Stock data cannot be loaded without a valid license" +
+                "<br/><a href='#' id='checkLicense'>Force re-check</a>" +
+                "</div>" +
+            "</div>");
+        $("#openSettings").click(function () {
+            chrome.runtime.sendMessage({type: 'options'}, function (res) {
+            });
         });
-        window.location.reload();
+        $("#checkLicense").click(function () {
+            chrome.runtime.sendMessage({type: 'license'}, function (res) {
+            });
+        });
+        $("#showAlert").click(function () {
+            $("#tg-alert-invalid").toggle();
+        });
+        $("#closeAlert").click(function () {
+            $("#tg-alert-invalid").hide();
+        });
     });
 
 }
