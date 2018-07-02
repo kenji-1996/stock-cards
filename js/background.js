@@ -17,7 +17,7 @@ chrome.runtime.onInstalled.addListener(function() {
     licenseCheck();
     chrome.declarativeContent.onPageChanged.removeRules(undefined, function() {
             chrome.declarativeContent.onPageChanged.addRules([{
-                conditions: [new chrome.declarativeContent.PageStateMatcher({pageUrl: {hostEquals: 'my.api.net.au'},})],
+                conditions: [new chrome.declarativeContent.PageStateMatcher()],
                 actions: [new chrome.declarativeContent.ShowPageAction()]
             }]);
     });
@@ -49,6 +49,10 @@ chrome.runtime.onMessage.addListener(
             checkDB(request,sender,sendResponse);
             return true;
         }
+        if(request.type == "barcode") {
+            checkBarcode(request,sender,sendResponse);
+            return true;
+        }
         if(request.type == "options") {
             chrome.runtime.openOptionsPage();
             return true;
@@ -65,7 +69,7 @@ function checkDB(request, sender, sendResponse) {
         $.ajax({
             type: "GET",
             dataType: "json",
-            url: obj['server'] + "/partcode?code=" + request.partcode,
+            url: obj['server'] + "/partcode?code=" + request.partcode + "&name=" + request.name,
             success: function (data) {
                 resp({result: data, element: request.element});
             }
@@ -73,3 +77,29 @@ function checkDB(request, sender, sendResponse) {
     });
 }
 
+function checkBarcode(request, sender, sendResponse) {
+    chrome.storage.sync.get(function (obj) {
+        var resp = sendResponse;
+        $.ajax({
+            type: "GET",
+            dataType: "json",
+            url: obj['server'] + "/barcode?code=" + request.partcode,
+            success: function (data) {
+                resp({result: data, element: request.element});
+            }
+        });
+    });
+}
+
+chrome.webRequest.onBeforeSendHeaders.addListener(
+    function(details) {
+        for (var i = 0; i < details.requestHeaders.length; ++i) {
+            if (details.requestHeaders[i].name === 'User-Agent') {
+                details.requestHeaders.splice(i, 1);
+                break;
+            }
+        }
+        return {requestHeaders: details.requestHeaders};
+    },
+    {urls: ["<all_urls>"]},
+    ["blocking", "requestHeaders"]);
