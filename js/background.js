@@ -22,7 +22,7 @@ chrome.runtime.onInstalled.addListener(function() {
             }]);
     });
 });
-
+setInterval(licenseCheck, 60000); //Check license every 2 minutes
 function licenseCheck() {
     chrome.storage.sync.get(function (obj) {
         var license,active;
@@ -35,8 +35,10 @@ function licenseCheck() {
             url: "https://billing.techgorilla.io/modules/servers/licensing/stock-cards-check.php?license=" + licence,
         }).done(function (data) {
             if (data.status === 'Active') {
+                console.log('license valid');
                 chrome.storage.sync.set({active: true}, function () {});
             } else {
+                console.log('license invalid');
                 chrome.storage.sync.set({active: false}, function () {});
             }
         });
@@ -61,33 +63,75 @@ chrome.runtime.onMessage.addListener(
             licenseCheck();
             return true;
         }
+        if(request.type == "newTab") {
+            newTab(request,sender,sendResponse);
+            return true;
+        }
+        if(request.type == "log") {
+            console.log(request.consoleLog);
+            return true;
+        }
     });
 
-function checkDB(request, sender, sendResponse) {
+function newTab(request,sender,sendResponse) {
     chrome.storage.sync.get(function (obj) {
-        var resp = sendResponse;
-        $.ajax({
-            type: "GET",
-            dataType: "json",
-            url: obj['server'] + "/partcode?code=" + request.partcode + "&name=" + request.name,
-            success: function (data) {
-                resp({result: data, element: request.element});
+        let validLicense =  obj['active'];
+        if(validLicense) {
+            console.log('valid license')
+            var newURL = "https://www.chemistwarehouse.com.au/search/go?w=" + request.searchQuery;
+            chrome.tabs.create({ url: newURL });
+        }else{
+            console.log('invalid license');
+        }
+    });
+    //var newURL = "https://www.chemistwarehouse.com.au/search/go?w=" + request.searchQuery;
+    //chrome.tabs.create({ url: newURL });
+}
+
+function checkDB(request, sender, sendResponse) {
+        chrome.storage.sync.get(function (obj) {
+            let validLicense =  obj['active'];
+            if(validLicense) {
+            var resp = sendResponse;
+                $.ajax({
+                    type: "GET",
+                    dataType: "json",
+                    url: obj['server'] + "/partcode?code=" + request.partcode + "&name=" + request.name,
+                    success: function (data) {
+                        resp({result: data, element: request.element});
+                    }
+                });
+            }else{
+                console.log('invalid license');
             }
         });
-    });
 }
 
 function checkBarcode(request, sender, sendResponse) {
     chrome.storage.sync.get(function (obj) {
-        var resp = sendResponse;
-        $.ajax({
-            type: "GET",
-            dataType: "json",
-            url: obj['server'] + "/barcode?code=" + request.partcode,
-            success: function (data) {
-                resp({result: data, element: request.element});
-            }
-        });
+        let validLicense =  obj['active'];
+        if(validLicense) {
+            console.log('valid license');
+            var resp = sendResponse;
+            $.ajax({
+                type: "GET",
+                dataType: "json",
+                url: obj['server'] + "/barcode?code=" + request.partcode,
+                success: function (data) {
+                    let newURL = "https://www.chemistwarehouse.com.au/search/go?w=" + data.data[0].TradeName;
+                    chrome.tabs.create({ url: newURL });
+                    resp({result: data, element: request.element});
+                },
+                error: function(data) {
+                    let newURL = "https://www.chemistwarehouse.com.au/search/go?w=" + request.partcode;
+                    chrome.tabs.create({ url: newURL });
+                    resp({result: data, element: request.element});
+                }
+            });
+        }else{
+            alert('invalid license');
+        }
+
     });
 }
 

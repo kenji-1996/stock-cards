@@ -1,9 +1,10 @@
 {
   "name": "TechGorilla Stock Order Assistant",
   "short_name": "TG-Stock",
-  "version": "1.0.4",
+  "version": "1.1.0",
   "description": "Checks stock database for stock websites",
   "permissions": ["storage","declarativeContent", "activeTab", "http://my.api.net.au/*", "webRequest", "webRequestBlocking"],
+  "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
   "background": {
     "scripts": [
       "assets/lib/jquery/jquery-3.3.1.min.js",

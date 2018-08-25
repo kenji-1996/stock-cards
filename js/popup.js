@@ -11,13 +11,28 @@ openSettings.onclick = function(element) {
 $( "form" ).submit(function( event ) {
     event.preventDefault();
     var input = $( "input:first" ).val();
-    alert(input);
     chrome.runtime.sendMessage({
         type: 'barcode',
         partcode: input,
     }, function (response) {
         if (response) {
-            console.log(response.result.data[0]);
+            console.log(response.result.data[0].TradeName);
+        }
+    });
+});
+
+$( "#submitSearch" ).click(function( ) {
+    let input = $('#server').val();
+    chrome.runtime.sendMessage({
+        type: 'log',
+        consoleLog: input,
+    });
+    chrome.runtime.sendMessage({
+        type: 'barcode',
+        partcode: input,
+    }, function (response) {
+        if (response) {
+            console.log(response.result.data[0].TradeName);
         }
     });
 });
