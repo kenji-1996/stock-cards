@@ -121,7 +121,7 @@ function loadScript() {
                         "  </div>" +
                         "</div>");
                     product.element.find(".product-name a").after(
-                        "<br/><span class='tg-badge tg-badge-success small'>" + response.result.data[0].SOH + "</span>" +
+                        "<br/><span class='tg-badge tg-badge-success small'>" + response.result.data[0].SOH / response.result.data[0].PackSize + "</span>" +
                         "<br/><span class='tg-badge tg-badge-warning small'>" + response.result.data[0].TradeName + "</span>" +
                         "<br/><span class='tg-badge tg-badge-info small pointer'>StockCards Info</span>" // data-toggle='modal' data-target='#" + response.result.data[0].StockID + "'
                     );
@@ -190,7 +190,7 @@ function loadScript() {
                         "  </div>" +
                         "</div>");
                     product.element.find(".product-name a").after(
-                        "<br/><span class='badge badge-success small'>" + response.result.data[0].SOH + "</span>" +
+                        "<br/><span class='badge badge-success small'>" + response.result.data[0].SOH / response.result.data[0].PackSize + "</span>" +
                         "<br/><span class='badge badge-warning small'>" + response.result.data[0].TradeName + "</span>" +
                         "<br/><button class='badge badge-info small pointer' data-toggle='modal' data-target='#" + response.result.data[0].StockID + "'>StockCards Info</button>"
                     );
